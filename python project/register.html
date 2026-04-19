@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Register — ShopWave{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1>Create account</h1>
+    <p class="auth-sub">Join ShopWave today</p>
+    <form method="POST" action="{{ url_for('register') }}" class="auth-form">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="name" required placeholder="Jane Smith">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" required placeholder="jane@example.com">
+      </div>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" required placeholder="janesmth">
+      </div>
+      <div class="form-group">
+        <label>Password <small>(min. 6 characters)</small></label>
+        <input type="password" name="password" required placeholder="••••••••" minlength="6">
+      </div>
+      <button type="submit" class="btn btn--primary btn--full">Create Account</button>
+    </form>
+    <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Wishlist — ShopWave{% endblock %}
+{% block content %}
+<div class="container">
+  <h1 class="page-title">Your Wishlist</h1>
+  {% if items %}
+  <div class="product-grid">
+    {% for p in items %}
+    <div class="product-card">
+      <a href="{{ url_for('product_detail', pid=p.id) }}" class="product-img-wrap">
+        <img src="{{ p.photo }}" alt="{{ p.name }}" class="product-photo" loading="lazy">
+        <div class="product-overlay"><span>Quick View</span></div>
+      </a>
+      <div class="product-info">
+        <div class="product-meta">
+          <span class="product-cat">{{ p.category }}</span>
+          <span class="product-rating">★ {{ p.rating }}</span>
+        </div>
+        <h3 class="product-name"><a href="{{ url_for('product_detail', pid=p.id) }}">{{ p.name }}</a></h3>
+        <div class="product-footer">
+          <span class="product-price">₹{{ "{:,}".format(p.price) }}</span>
+          <div style="display:flex;gap:.5rem">
+            <form action="{{ url_for('add_to_cart', pid=p.id) }}" method="POST" style="display:inline">
+              <input type="hidden" name="qty" value="1">
+              <button class="btn-add" type="submit">+ Add</button>
+            </form>
+            <a href="{{ url_for('toggle_wishlist', pid=p.id) }}" class="btn-add btn-add--remove">✕</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <span>♡</span>
+    <h3>Your wishlist is empty</h3>
+    <p>Save items you love for later.</p>
+    <a href="{{ url_for('products') }}" class="btn btn--primary">Browse Products</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}My Orders — ShopWave{% endblock %}
+{% block content %}
+<div class="container">
+  <h1 class="page-title">My Orders</h1>
+  {% if orders %}
+  <div class="orders-list">
+    {% for order in orders|reverse %}
+    <div class="order-card">
+      <div class="order-header">
+        <div>
+          <h3>Order #{{ order.id }}</h3>
+          <span class="order-date">{{ order.date }}</span>
+        </div>
+        <span class="order-status order-status--{{ order.status.lower() }}">{{ order.status }}</span>
+      </div>
+      <div class="order-items">
+        {% for item in order.items %}
+        <span class="order-item-tag">{{ item.name }} × {{ item.qty }}</span>
+        {% endfor %}
+      </div>
+      <div class="order-footer">
+        <span>{{ order.items|length }} item{% if order.items|length != 1 %}s{% endif %}</span>
+        <span class="order-total">Total: <strong>${{ "%.2f"|format(order.total) }}</strong></span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <span>📦</span>
+    <h3>No orders yet</h3>
+    <p>Start shopping to see your orders here.</p>
+    <a href="{{ url_for('products') }}" class="btn btn--primary">Shop Now</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

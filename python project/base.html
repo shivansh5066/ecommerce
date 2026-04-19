@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ShopWave{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="{{ url_for('index') }}" class="logo">ShopWave</a>
+
+    <div class="nav-search">
+      <input type="text" id="searchInput" placeholder="Search products…" autocomplete="off">
+      <div class="search-dropdown" id="searchDropdown"></div>
+    </div>
+
+    <div class="nav-links">
+      <a href="{{ url_for('products') }}">Shop</a>
+      {% if logged_in %}
+        <a href="{{ url_for('wishlist') }}">Wishlist</a>
+        <a href="{{ url_for('orders') }}">Orders</a>
+        <a href="{{ url_for('logout') }}" class="nav-logout">Logout</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+      {% endif %}
+      <a href="{{ url_for('cart') }}" class="cart-btn">
+        Cart
+        {% if cart_count > 0 %}<span class="cart-badge">{{ cart_count }}</span>{% endif %}
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── FLASH ────────────────────────────────────────────────────────────────── -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-wrap">
+      {% for cat, msg in messages %}
+        <div class="flash flash--{{ cat }}">{{ msg }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- ── CONTENT ──────────────────────────────────────────────────────────────── -->
+{% block content %}{% endblock %}
+
+<!-- ── FOOTER ───────────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo">ShopWave</span>
+      <p>Curated goods for the considered life.</p>
+    </div>
+    <div class="footer-links">
+      <a href="{{ url_for('products') }}">Shop All</a>
+      <a href="{{ url_for('cart') }}">Cart</a>
+      {% if logged_in %}
+        <a href="{{ url_for('orders') }}">My Orders</a>
+        <a href="{{ url_for('wishlist') }}">Wishlist</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}">Register</a>
+      {% endif %}
+    </div>
+    <p class="footer-copy">© 2024 ShopWave — College Project</p>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

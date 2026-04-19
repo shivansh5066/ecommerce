@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmed — ShopWave{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="success-wrap">
+    <div class="success-icon">✓</div>
+    <h1>Order Confirmed!</h1>
+    {% if order %}
+    <p class="success-sub">Thank you for your order. Here's your summary:</p>
+    <div class="success-card">
+      <div class="summary-row"><span>Order ID</span><strong>#{{ order.id }}</strong></div>
+      <div class="summary-row"><span>Status</span><span class="order-status order-status--confirmed">{{ order.status }}</span></div>
+      <div class="summary-row"><span>Items</span><span>{{ order.items|length }}</span></div>
+      <div class="summary-row summary-total"><span>Total</span><span>${{ "%.2f"|format(order.total) }}</span></div>
+    </div>
+    {% endif %}
+    <div class="success-actions">
+      <a href="{{ url_for('orders') }}" class="btn btn--primary">View Orders</a>
+      <a href="{{ url_for('products') }}" class="btn btn--ghost">Continue Shopping</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

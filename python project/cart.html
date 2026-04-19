@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Your Cart — ShopWave{% endblock %}
+{% block content %}
+<div class="container">
+  <h1 class="page-title">Shopping Cart</h1>
+  {% if items %}
+  <div class="cart-layout">
+    <div class="cart-items">
+      {% for item in items %}
+      <div class="cart-row">
+        <img src="{{ item.photo }}" alt="{{ item.name }}" class="cart-img-real">
+        <div class="cart-details">
+          <h3><a href="{{ url_for('product_detail', pid=item.id) }}">{{ item.name }}</a></h3>
+          <span class="product-cat">{{ item.category }}</span>
+          <span class="cart-unit-price">₹{{ "{:,}".format(item.price) }} each</span>
+        </div>
+        <div class="cart-qty">
+          <form action="{{ url_for('update_cart') }}" method="POST" class="qty-form">
+            <input type="hidden" name="pid" value="{{ item.id }}">
+            <button type="submit" name="qty" value="{{ item.qty - 1 }}" class="qty-btn">−</button>
+            <span>{{ item.qty }}</span>
+            <button type="submit" name="qty" value="{{ item.qty + 1 }}" class="qty-btn">+</button>
+          </form>
+        </div>
+        <div class="cart-price">₹{{ "{:,}".format(item.subtotal) }}</div>
+        <a href="{{ url_for('remove_from_cart', pid=item.id) }}" class="cart-remove">✕</a>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="cart-summary">
+      <h3>Order Summary</h3>
+      <div class="summary-row"><span>Subtotal</span><span>₹{{ "{:,}".format(total) }}</span></div>
+      <div class="summary-row"><span>Shipping</span><span>{% if total >= 999 %}Free{% else %}₹99{% endif %}</span></div>
+      <div class="summary-row summary-total"><span>Total</span><span>₹{{ "{:,}".format(total if total >= 999 else total + 99) }}</span></div>
+      <a href="{{ url_for('checkout') }}" class="btn btn--primary btn--full">Proceed to Checkout</a>
+      <a href="{{ url_for('products') }}" class="btn btn--ghost btn--full" style="margin-top:.75rem">Continue Shopping</a>
+    </div>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <span>🛒</span>
+    <h3>Your cart is empty</h3>
+    <p>Add some products to get started.</p>
+    <a href="{{ url_for('products') }}" class="btn btn--primary">Start Shopping</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

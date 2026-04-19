@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — ShopWave{% endblock %}
+{% block content %}
+<div class="container">
+  <nav class="breadcrumb">
+    <a href="{{ url_for('index') }}">Home</a> /
+    <a href="{{ url_for('products') }}">Shop</a> /
+    <a href="{{ url_for('products', category=product.category) }}">{{ product.category }}</a> /
+    <span>{{ product.name }}</span>
+  </nav>
+
+  <div class="detail-layout">
+    <div class="detail-img-wrap">
+      <img src="{{ product.photo }}" alt="{{ product.name }}" class="detail-real-img">
+      <a href="{{ url_for('toggle_wishlist', pid=product.id) }}" class="wishlist-btn">♡ Save</a>
+    </div>
+
+    <div class="detail-info">
+      <span class="product-cat product-cat--lg">{{ product.category }}</span>
+      <h1 class="detail-title">{{ product.name }}</h1>
+      <div class="detail-rating">
+        <span class="stars">{% for i in range(5) %}{% if loop.index <= product.rating|int %}★{% else %}☆{% endif %}{% endfor %}</span>
+        <span>{{ product.rating }} ({{ product.reviews }} reviews)</span>
+      </div>
+      <p class="detail-price">₹{{ "{:,}".format(product.price) }}</p>
+      <p class="detail-desc">{{ product.description }}</p>
+      <div class="detail-stock {% if product.stock <= 5 %}detail-stock--low{% endif %}">
+        {% if product.stock > 5 %}✓ In stock — {{ product.stock }} available
+        {% elif product.stock > 0 %}⚠ Only {{ product.stock }} left!
+        {% else %}✗ Out of stock{% endif %}
+      </div>
+      {% if product.stock > 0 %}
+      <form action="{{ url_for('add_to_cart', pid=product.id) }}" method="POST" class="detail-form">
+        <div class="qty-control">
+          <label>Quantity</label>
+          <div class="qty-wrap">
+            <button type="button" class="qty-btn" onclick="changeQty(-1)">−</button>
+            <input type="number" name="qty" id="qtyInput" value="1" min="1" max="{{ product.stock }}">
+            <button type="button" class="qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+        </div>
+        <button class="btn btn--primary btn--full" type="submit">Add to Cart</button>
+      </form>
+      {% else %}
+      <button class="btn btn--disabled btn--full" disabled>Out of Stock</button>
+      {% endif %}
+      <div class="detail-perks">
+        <span>🚚 Free shipping on orders over ₹999</span>
+        <span>↩️ 30-day returns</span>
+        <span>🔒 Secure UPI & card checkout</span>
+      </div>
+    </div>
+  </div>
+
+  {% if related %}
+  <div class="related-section">
+    <h2 class="section-title">You might also like</h2>
+    <div class="product-grid product-grid--related">
+      {% for p in related %}
+      <div class="product-card">
+        <a href="{{ url_for('product_detail', pid=p.id) }}" class="product-img-wrap">
+          <img src="{{ p.photo }}" alt="{{ p.name }}" class="product-photo" loading="lazy">
+          <div class="product-overlay"><span>Quick View</span></div>
+        </a>
+        <div class="product-info">
+          <h3 class="product-name"><a href="{{ url_for('product_detail', pid=p.id) }}">{{ p.name }}</a></h3>
+          <div class="product-footer">
+            <span class="product-price">₹{{ "{:,}".format(p.price) }}</span>
+            <form action="{{ url_for('add_to_cart', pid=p.id) }}" method="POST" style="display:inline">
+              <input type="hidden" name="qty" value="1">
+              <button class="btn-add" type="submit">+ Add</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+<script>
+function changeQty(d){const i=document.getElementById('qtyInput');let v=parseInt(i.value)+d;if(v<1)v=1;if(v>parseInt(i.max))v=parseInt(i.max);i.value=v;}
+</script>
+{% endblock %}
